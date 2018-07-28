@@ -1,0 +1,34 @@
+---
+ - hosts: localhost 
+   connection: local
+   tasks:
+    - name: Download Python 2x 2.7.15 on RHEL 7 server
+      get_url:
+       url: https://www.python.org/ftp/python/2.7.15/Python-2.7.15.tgz
+       #dest: "{{ package_folder }}"
+       dest: /root/pyth/
+       mode: 0440
+    - name: Extract Python folder of .tgz extension into package_folder
+      unarchive:
+       #src: "{{ package_folder }}"/Python-2.7.15.tgz
+       #dest: "{{ package_folder }}"
+       src: /root/pyth/Python-2.7.15.tgz
+       dest: /root/pyth/
+    - name: execute ./configure command on remote server
+      command: ./configure
+       chdir: /root/pyth/Python-2.7.15
+    - name: execute make module to build  
+      make:
+       #chdir: "{{ package_folder }}"/Python-2.7.15
+       chdir: /root/pyth/Python-2.7.15
+       target: all
+      become: yes
+      
+    - name: execute make altinstall  
+      make:
+       #chdir: "{{ package_folder }}"/Python-2.7.15
+       chdir: /root/pyth/Python-2.7.15
+       target: altinstall
+       #shell: make altinstall
+      become: yes
+                          
